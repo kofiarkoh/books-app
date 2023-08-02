@@ -7,10 +7,15 @@ import * as Yup from "yup";
 import FormPasswordInput from "../../../components/forms/FormPasswordInput";
 import FormTextField from "../../../components/forms/FormTextField";
 import SubmitButton from "../../../components/forms/SubmitButton";
-import {useState} from "react";
+import {use, useState} from "react";
 import {useAppDispatch} from "@/redux/store";
 import {POST} from "../../../api/base";
 import {showSnackBar} from "../../../redux/snackbarSlice";
+import {
+	setBearerToken,
+	setLoginState,
+	setUserInfo,
+} from "../../../redux/loginSlice";
 
 const valdiationSchema = Yup.object().shape({
 	email: Yup.string().email().required(),
@@ -51,8 +56,13 @@ export default function LoginPage() {
 			})
 		);
 
-		sessionStorage.setItem("user_info", JSON.stringify(response.msg.data));
-		sessionStorage.setItem("bearer_token", JSON.stringify(response.msg.token));
+		let user = response.msg.data;
+		let token = response.msg.token;
+		sessionStorage.setItem("user_info", JSON.stringify(user));
+		sessionStorage.setItem("bearer_token", JSON.stringify(token));
+		dispatch(setUserInfo(user));
+		dispatch(setBearerToken(token));
+		dispatch(setLoginState(true));
 	};
 	return (
 		<div
