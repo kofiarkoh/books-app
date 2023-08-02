@@ -9,6 +9,8 @@ import FormTextField from "../../../components/forms/FormTextField";
 import SubmitButton from "../../../components/forms/SubmitButton";
 import {useState} from "react";
 import {POST} from "../../../api/base";
+import {useAppDispatch} from "../../../redux/store";
+import {showSnackBar} from "../../../redux/snackbarSlice";
 
 const valdiationSchema = Yup.object().shape({
 	first_name: Yup.string().required(),
@@ -22,6 +24,7 @@ const valdiationSchema = Yup.object().shape({
 
 export default function RegistrationPage() {
 	const [loading, setLoading] = useState(false);
+	const dispatch = useAppDispatch();
 
 	const handleRegister = async (data: any, helpers: FormikHelpers<any>) => {
 		if (loading) {
@@ -35,11 +38,24 @@ export default function RegistrationPage() {
 		if (response.is_error) {
 			if (response.code === 422) {
 				helpers.setErrors(response.msg.errors);
+				return;
 			}
 
-			// show error message in snackbar
+			dispatch(
+				showSnackBar({
+					message: response.msg.message ? response.msg.message : "An error occured",
+					severity: response.is_error ? "error" : "success",
+				})
+			);
 			return;
 		}
+
+		dispatch(
+			showSnackBar({
+				message: response.msg.message,
+				severity: "success",
+			})
+		);
 
 		sessionStorage.setItem("user_info", JSON.stringify(response.msg.data));
 		sessionStorage.setItem("bearer_token", JSON.stringify(response.msg.token));
