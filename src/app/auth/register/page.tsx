@@ -11,6 +11,7 @@ import {useState} from "react";
 import {POST} from "../../../api/base";
 import {useAppDispatch} from "../../../redux/store";
 import {showSnackBar} from "../../../redux/snackbarSlice";
+import {setBearerToken, setLoginState, setUserInfo} from "@/redux/loginSlice";
 
 const valdiationSchema = Yup.object().shape({
 	first_name: Yup.string().required(),
@@ -57,8 +58,13 @@ export default function RegistrationPage() {
 			})
 		);
 
-		sessionStorage.setItem("user_info", JSON.stringify(response.msg.data));
-		sessionStorage.setItem("bearer_token", JSON.stringify(response.msg.token));
+		let user = response.msg.data;
+		let token = response.msg.token;
+		sessionStorage.setItem("user_info", JSON.stringify(user));
+		sessionStorage.setItem("bearer_token", JSON.stringify(token));
+		dispatch(setUserInfo(user));
+		dispatch(setBearerToken(token));
+		dispatch(setLoginState(true));
 	};
 
 	return (
