@@ -1,18 +1,59 @@
 "use client";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
-import {Formik} from "formik";
+import {Formik, FormikHelpers} from "formik";
 import Link from "next/link";
 import * as Yup from "yup";
 import FormPasswordInput from "../../../components/forms/FormPasswordInput";
 import FormTextField from "../../../components/forms/FormTextField";
 import SubmitButton from "../../../components/forms/SubmitButton";
+import {useState} from "react";
+import {useAppDispatch} from "@/redux/store";
+import {POST} from "../../../api/base";
+import {showSnackBar} from "../../../redux/snackbarSlice";
 
 const valdiationSchema = Yup.object().shape({
 	email: Yup.string().email().required(),
 	password: Yup.string().required(),
 });
 export default function LoginPage() {
+	const [loading, setLoading] = useState(false);
+	const dispatch = useAppDispatch();
+
+	const handleLogin = async (data: any, helpers: FormikHelpers<any>) => {
+		if (loading) {
+			return;
+		}
+
+		setLoading(true);
+		let response = await POST("auth/login", data);
+		setLoading(false);
+		console.log(response);
+		if (response.is_error) {
+			if (response.code === 422) {
+				helpers.setErrors(response.msg.errors);
+				return;
+			}
+
+			dispatch(
+				showSnackBar({
+					message: response.msg.message ? response.msg.message : "An error occured",
+					severity: response.is_error ? "error" : "success",
+				})
+			);
+			return;
+		}
+
+		dispatch(
+			showSnackBar({
+				message: response.msg.message,
+				severity: "success",
+			})
+		);
+
+		sessionStorage.setItem("user_info", JSON.stringify(response.msg.data));
+		sessionStorage.setItem("bearer_token", JSON.stringify(response.msg.token));
+	};
 	return (
 		<div
 			style={{
@@ -31,7 +72,7 @@ export default function LoginPage() {
 				validateOnBlur={false}
 				validateOnMount={false}
 				validateOnChange={false}
-				onSubmit={() => {}}>
+				onSubmit={handleLogin}>
 				<Card sx={{padding: 5, margin: {xs: 4}}}>
 					<Typography variant="h4" my={3} sx={{textAlign: "center"}}>
 						Welcome Back
@@ -45,7 +86,9 @@ export default function LoginPage() {
 					/>
 
 					<div style={{display: "flex", justifyContent: "flex-end"}}></div>
-					<SubmitButton sx={{width: "100%", my: 3}}>Log In</SubmitButton>
+					<SubmitButton loading={loading} sx={{width: "100%", my: 3}}>
+						Log In
+					</SubmitButton>
 					<div
 						style={{
 							display: "flex",
