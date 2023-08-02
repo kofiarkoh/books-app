@@ -59,7 +59,7 @@ export default function LoginPage() {
 		let user = response.msg.data;
 		let token = response.msg.meta.token;
 		sessionStorage.setItem("user_info", JSON.stringify(user));
-		sessionStorage.setItem("bearer_token", JSON.stringify(token));
+		sessionStorage.setItem("bearer_token", token);
 		dispatch(setUserInfo(user));
 		dispatch(setBearerToken(token));
 		dispatch(setLoginState(true));
