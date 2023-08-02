@@ -7,13 +7,17 @@ import {ThemeProvider, createTheme} from "@mui/material/styles";
 import "./globals.css";
 import {Provider} from "react-redux";
 import {reduxStore} from "../redux/store";
+import AppSnackbar from "../components/forms/AppSnackbar";
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
 	return (
 		<html lang="en">
 			<Provider store={reduxStore}>
 				<ThemeProvider theme={createTheme()}>
-					<body>{children}</body>
+					<body>
+						{children}
+						<AppSnackbar />
+					</body>
 				</ThemeProvider>
 			</Provider>
 		</html>

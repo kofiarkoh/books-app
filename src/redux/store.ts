@@ -4,8 +4,11 @@ import {
 	configureStore,
 } from "@reduxjs/toolkit";
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
+import snackbarSlice from "./snackbarSlice";
 
-export const rootReducer = combineReducers({});
+export const rootReducer = combineReducers({
+	snackbarState: snackbarSlice,
+});
 
 export function setupStore(preloadedState?: PreloadedState<RootState>) {
 	return configureStore({
