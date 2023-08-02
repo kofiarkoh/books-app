@@ -1,4 +1,5 @@
 import axios from "axios";
+import {reduxStore} from "../redux/store";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export const errorHandler = (error: any) => {
@@ -41,8 +42,10 @@ export const POST = async (
 	headers: any = {},
 	timeout = 1800000
 ) => {
+	let token = reduxStore.getState().loginState.bearerToken;
 	let _headers = {
 		Accept: "application/json",
+		Authorization: `Bearer ${token}`,
 		"Content-Type": "application/json",
 	};
 	_headers = {..._headers, ...headers};
