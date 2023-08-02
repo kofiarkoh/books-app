@@ -1,12 +1,14 @@
 "use client";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
-import {Formik} from "formik";
+import {Formik, FormikHelpers} from "formik";
 import Link from "next/link";
 import * as Yup from "yup";
 import FormPasswordInput from "../../../components/forms/FormPasswordInput";
 import FormTextField from "../../../components/forms/FormTextField";
 import SubmitButton from "../../../components/forms/SubmitButton";
+import {useState} from "react";
+import {POST} from "../../../api/base";
 
 const valdiationSchema = Yup.object().shape({
 	first_name: Yup.string().required(),
@@ -19,6 +21,30 @@ const valdiationSchema = Yup.object().shape({
 });
 
 export default function RegistrationPage() {
+	const [loading, setLoading] = useState(false);
+
+	const handleRegister = async (data: any, helpers: FormikHelpers<any>) => {
+		if (loading) {
+			return;
+		}
+
+		setLoading(true);
+		let response = await POST("auth/register", data);
+		setLoading(false);
+		console.log(response);
+		if (response.is_error) {
+			if (response.code === 422) {
+				helpers.setErrors(response.msg.errors);
+			}
+
+			// show error message in snackbar
+			return;
+		}
+
+		sessionStorage.setItem("user_info", JSON.stringify(response.msg.data));
+		sessionStorage.setItem("bearer_token", JSON.stringify(response.msg.token));
+	};
+
 	return (
 		<div
 			style={{
@@ -43,7 +69,7 @@ export default function RegistrationPage() {
 				validateOnBlur={false}
 				validateOnMount={false}
 				validateOnChange={false}
-				onSubmit={() => {}}>
+				onSubmit={handleRegister}>
 				<Card sx={{padding: 5, margin: {xs: 4}}}>
 					<Typography variant="h4" my={3} sx={{textAlign: "center"}}>
 						SIGN UP
@@ -65,7 +91,9 @@ export default function RegistrationPage() {
 					/>
 
 					<div style={{display: "flex", justifyContent: "flex-end"}}></div>
-					<SubmitButton sx={{width: "100%", my: 3}}>Register</SubmitButton>
+					<SubmitButton sx={{width: "100%", my: 3}} loading={loading}>
+						Register
+					</SubmitButton>
 					<div
 						style={{
 							display: "flex",
