@@ -1,10 +1,14 @@
 "use client";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
-import {Formik} from "formik";
+import {Formik, FormikHelpers} from "formik";
+import {useState} from "react";
 import * as Yup from "yup";
+import {POST} from "../../../api/base";
 import FormTextField from "../../../components/forms/FormTextField";
 import SubmitButton from "../../../components/forms/SubmitButton";
+import {showSnackBar} from "../../../redux/snackbarSlice";
+import {useAppDispatch} from "../../../redux/store";
 
 const valdiationSchema = Yup.object().shape({
 	title: Yup.string().required(),
@@ -12,6 +16,40 @@ const valdiationSchema = Yup.object().shape({
 	author_name: Yup.string().required(),
 });
 export default function AddBookDetails() {
+	const [loading, setLoading] = useState(false);
+	const dispatch = useAppDispatch();
+
+	const saveBookDetails = async (data: any, helpers: FormikHelpers<any>) => {
+		if (loading) {
+			return;
+		}
+
+		setLoading(true);
+		let response = await POST("books", data);
+		setLoading(false);
+		console.log(response);
+		if (response.is_error) {
+			if (response.code === 422) {
+				helpers.setErrors(response.msg.errors);
+				return;
+			}
+
+			dispatch(
+				showSnackBar({
+					message: response.msg.message ? response.msg.message : "An error occured",
+					severity: response.is_error ? "error" : "success",
+				})
+			);
+			return;
+		}
+
+		dispatch(
+			showSnackBar({
+				message: response.msg.message,
+				severity: "success",
+			})
+		);
+	};
 	return (
 		<>
 			<div
@@ -35,7 +73,7 @@ export default function AddBookDetails() {
 					validateOnBlur={false}
 					validateOnMount={false}
 					validateOnChange={false}
-					onSubmit={() => {}}>
+					onSubmit={saveBookDetails}>
 					<Card sx={{padding: 5, margin: {xs: 4}}}>
 						<Typography variant="h4" my={3} sx={{textAlign: "center"}}>
 							Book Details
@@ -66,7 +104,9 @@ export default function AddBookDetails() {
 								display: "flex",
 								justifyContent: "flex-end",
 							}}></div>
-						<SubmitButton sx={{width: "100%", my: 3}}>Save Book Details</SubmitButton>
+						<SubmitButton loading={loading} sx={{width: "100%", my: 3}}>
+							Save Book Details
+						</SubmitButton>
 					</Card>
 				</Formik>
 			</div>
