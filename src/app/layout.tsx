@@ -6,8 +6,11 @@ import "@fontsource/roboto/700.css";
 import {ThemeProvider, createTheme} from "@mui/material/styles";
 import "./globals.css";
 import {Provider} from "react-redux";
-import {reduxStore} from "../redux/store";
+import {reduxStore, useAppDispatch} from "../redux/store";
 import AppSnackbar from "../components/forms/AppSnackbar";
+import {setBearerToken, setLoginState, setUserInfo} from "../redux/loginSlice";
+import {useRouter} from "next/navigation";
+import {ReactElement, useState, useEffect} from "react";
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
 	return (
@@ -15,11 +18,45 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 			<Provider store={reduxStore}>
 				<ThemeProvider theme={createTheme()}>
 					<body>
-						{children}
-						<AppSnackbar />
+						<UserInfoLoader>
+							<>
+								{children}
+								<AppSnackbar />
+							</>
+						</UserInfoLoader>
 					</body>
 				</ThemeProvider>
 			</Provider>
 		</html>
 	);
 }
+
+const UserInfoLoader = (props: ReactElement) => {
+	const [isloading, setLoading] = useState(true);
+	const router = useRouter();
+	const dispatch = useAppDispatch();
+	useEffect(() => {
+		setLoading(true);
+		let _userInfo: string | null = sessionStorage.getItem("user_info");
+		let token: string | null = sessionStorage.getItem("bearer_token");
+
+		if (!_userInfo || !token) {
+			setLoading(false);
+			dispatch(setLoginState(false));
+
+			router.push("/auth/login");
+		} else {
+			let userInfo = JSON.parse(_userInfo);
+			dispatch(setBearerToken(token));
+			dispatch(setUserInfo(userInfo));
+			dispatch(setLoginState(true));
+
+			setLoading(false);
+		}
+	}, []);
+
+	if (isloading) {
+		return <></>;
+	}
+	return <>{props.children}</>;
+};
