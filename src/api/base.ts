@@ -92,3 +92,29 @@ export const GET = async (endpoint: string, headers = {}) => {
 			return errorHandler(error);
 		});
 };
+
+export const DELETE = async (endpoint: string, headers = {}) => {
+	let token = reduxStore.getState().loginState.bearerToken;
+
+	let _headers = {
+		Accept: "application/json",
+		Authorization: `Bearer ${token}`,
+	};
+	let url = `${BASE_URL}/${endpoint}`;
+	return await axios
+		.delete(url, {
+			headers: _headers,
+
+			timeoutErrorMessage: "Connection Timed out",
+		})
+		.then((res) => {
+			return {
+				is_error: false,
+				msg: res.data,
+				code: 200,
+			};
+		})
+		.catch((error) => {
+			return errorHandler(error);
+		});
+};

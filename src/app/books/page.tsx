@@ -5,13 +5,14 @@ import {css} from "@emotion/react";
 import {Button, Typography} from "@mui/material";
 import Grid from "@mui/material/Grid";
 import {useRouter} from "next/navigation";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 
 import {useAppDispatch, useAppSelector} from "../../redux/store";
-import {updateBooks} from "../../redux/booksSlice";
+import {Book, removeBook, updateBooks} from "../../redux/booksSlice";
 import {showSnackBar} from "../../redux/snackbarSlice";
-import {GET} from "../../api/base";
+import {DELETE, GET} from "../../api/base";
 import BookItem, {BookItemSkeleton} from "../../components/BookItem";
+import ConfirmDialog from "../../components/ConfirmDialog";
 
 export default function AddTaskDetails() {
 	const [loading, setLoading] = useState(false);
@@ -19,6 +20,9 @@ export default function AddTaskDetails() {
 	const {user} = useAppSelector((state) => state.loginState);
 	const {books} = useAppSelector((state) => state.booksState);
 	const router = useRouter();
+
+	const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
+	const bookToDeletRef = useRef<Book>(null);
 
 	/**
 	 * retrieves all tasks from the api and saves them in redux store
@@ -46,6 +50,40 @@ export default function AddTaskDetails() {
 
 	const addBook = () => {
 		router.push("/tasks/details");
+	};
+
+	const triggerBookDelete = (book: Book) => {
+		bookToDeletRef.current = book;
+		setDeleteDialogVisible(true);
+	};
+
+	const closeDeleteDialog = () => {
+		bookToDeletRef.current = null;
+		setDeleteDialogVisible(false);
+	};
+	const deleteBook = async () => {
+		setDeleteDialogVisible(false);
+		let uuid = bookToDeletRef.current?.uuid;
+		if (loading) {
+			return;
+		}
+		setLoading(true);
+
+		let response = await DELETE(`books/${uuid}`);
+		setLoading(false);
+
+		if (response.is_error) {
+			closeDeleteDialog();
+			return;
+		}
+		dispatch(
+			showSnackBar({
+				message: response.msg.message ? response.msg.message : "An error occured",
+				severity: response.is_error ? "error" : "success",
+			})
+		);
+		dispatch(removeBook(uuid));
+		closeDeleteDialog();
 	};
 	useEffect(() => {
 		fetchTasks();
@@ -104,7 +142,7 @@ export default function AddTaskDetails() {
 							{books.map((item) => {
 								return (
 									<Grid key={item.uuid} item sm={12} md={6} lg={4}>
-										<BookItem book={item} />
+										<BookItem book={item} onDelete={triggerBookDelete} />
 									</Grid>
 								);
 							})}
@@ -112,6 +150,14 @@ export default function AddTaskDetails() {
 					)}
 				</Grid>
 			</div>
+			<ConfirmDialog
+				onAccept={deleteBook}
+				onCancel={closeDeleteDialog}
+				title={"Do you want to delete the book record with this title?"}
+				message={bookToDeletRef.current ? bookToDeletRef.current.title : ""}
+				visible={deleteDialogVisible}
+				isloading={false}
+			/>
 		</>
 	);
 }

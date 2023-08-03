@@ -20,9 +20,13 @@ export const booksSlice = createSlice({
 		updateBooks: (state, {payload}) => {
 			state.books = payload;
 		},
+
+		removeBook: (state, {payload}) => {
+			state.books = state.books.filter((i) => i.uuid !== payload);
+		},
 	},
 });
 
-export const {updateBooks} = booksSlice.actions;
+export const {updateBooks, removeBook} = booksSlice.actions;
 
 export default booksSlice.reducer;

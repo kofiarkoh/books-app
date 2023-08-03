@@ -13,21 +13,16 @@ import {useAppDispatch} from "../redux/store";
 
 type Props = {
 	book: Book;
+	onDelete: (uuid: string) => void;
 };
 
 export default function BookItem(props: Props) {
-	const {title, description, author_name} = props.book;
+	const {title, description, author_name, uuid} = props.book;
 	const dispatch = useAppDispatch();
 	const router = useRouter();
 	const [loading, setLoading] = useState(false);
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
-	const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-		setAnchorEl(event.currentTarget);
-	};
-	const closeTaskStatusMenu = () => {
-		setAnchorEl(null);
-	};
 
 	return (
 		<Box sx={{width: "100%"}}>
@@ -58,7 +53,10 @@ export default function BookItem(props: Props) {
 					<Typography variant="body2">{description}</Typography>
 				</CardContent>
 				<CardActions sx={{flexDirection: "row", justifyContent: "flex-end"}}>
-					<Button size="small" color="error" onClick={null}>
+					<Button
+						size="small"
+						color="error"
+						onClick={() => props.onDelete(props.book)}>
 						Delete
 					</Button>
 					<Button size="small" onClick={null}>
