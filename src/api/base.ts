@@ -118,3 +118,35 @@ export const DELETE = async (endpoint: string, headers = {}) => {
 			return errorHandler(error);
 		});
 };
+
+export const PATCH = async (
+	endpoint: string,
+	data: any,
+	headers = {},
+	timeout = 1800000
+) => {
+	let token = reduxStore.getState().loginState.bearerToken;
+	let _headers = {
+		Accept: "application/json",
+		Authorization: `Bearer ${token}`,
+		"Content-Type": "application/json",
+	};
+	_headers = {..._headers, ...headers};
+
+	return await axios
+		.patch(`${BASE_URL}/${endpoint}`, data, {
+			headers: _headers,
+			timeout: timeout,
+			timeoutErrorMessage: "Connection Timed out",
+		})
+		.then((res) => {
+			return {
+				is_error: false,
+				msg: res.data,
+				code: 200,
+			};
+		})
+		.catch((error) => {
+			return errorHandler(error);
+		});
+};

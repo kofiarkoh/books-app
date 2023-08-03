@@ -8,7 +8,7 @@ import Skeleton from "@mui/material/Skeleton";
 import Typography from "@mui/material/Typography";
 import {useRouter} from "next/navigation";
 import React, {useState} from "react";
-import {Book} from "../redux/booksSlice";
+import {Book, updateBookToEdit} from "../redux/booksSlice";
 import {useAppDispatch} from "../redux/store";
 
 type Props = {
@@ -24,6 +24,10 @@ export default function BookItem(props: Props) {
 	const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 	const open = Boolean(anchorEl);
 
+	const editBook = () => {
+		dispatch(updateBookToEdit(props.book));
+		router.push("/books/edit");
+	};
 	return (
 		<Box sx={{width: "100%"}}>
 			<Card
@@ -59,7 +63,7 @@ export default function BookItem(props: Props) {
 						onClick={() => props.onDelete(props.book)}>
 						Delete
 					</Button>
-					<Button size="small" onClick={null}>
+					<Button size="small" onClick={editBook}>
 						Edit
 					</Button>
 				</CardActions>
