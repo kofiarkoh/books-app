@@ -11,7 +11,7 @@ import {useAppDispatch, useAppSelector} from "../../redux/store";
 import {updateBooks} from "../../redux/booksSlice";
 import {showSnackBar} from "../../redux/snackbarSlice";
 import {GET} from "../../api/base";
-import BookItem from "../../components/BookItem";
+import BookItem, {BookItemSkeleton} from "../../components/BookItem";
 
 export default function AddTaskDetails() {
 	const [loading, setLoading] = useState(false);
@@ -88,7 +88,17 @@ export default function AddTaskDetails() {
 					</Grid>
 
 					{loading ? (
-						<></>
+						<>
+							<Grid item sm={12} md={6} lg={4}>
+								<BookItemSkeleton />
+							</Grid>
+							<Grid item sm={12} md={6} lg={4}>
+								<BookItemSkeleton />
+							</Grid>
+							<Grid item sm={12} md={6} lg={4}>
+								<BookItemSkeleton />
+							</Grid>
+						</>
 					) : (
 						<>
 							{books.map((item) => {

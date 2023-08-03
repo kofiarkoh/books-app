@@ -69,3 +69,37 @@ export default function BookItem(props: Props) {
 		</Box>
 	);
 }
+
+export function BookItemSkeleton() {
+	return (
+		<Box sx={{width: "100%"}}>
+			<Card
+				variant="outlined"
+				sx={{
+					width: "100%",
+					sheight: "400px",
+					display: "flex",
+					flexDirection: "column",
+				}}>
+				<LinearProgress />
+				<CardContent>
+					<Skeleton animation="wave" width="100px" />
+
+					<Skeleton animation="wave" width="150px" />
+
+					<Skeleton animation="wave" width="170px" sx={{mt: "40px"}} />
+					<Skeleton animation="wave" width="240px" />
+					<Skeleton animation="wave" width="240px" />
+					<Skeleton animation="wave" width="190px" />
+				</CardContent>
+				<CardActions sx={{flexDirection: "row", justifyContent: "flex-end"}}>
+					<div>
+						<Skeleton animation="wave" width="50px" sx={{marginRight: "10px"}} />
+					</div>
+					<Skeleton animation="wave" width="50px" />
+					<Skeleton animation="wave" width="50px" />
+				</CardActions>
+			</Card>
+		</Box>
+	);
+}
