@@ -49,7 +49,7 @@ export default function AddTaskDetails() {
 	};
 
 	const addBook = () => {
-		router.push("/tasks/details");
+		router.push("/books/create");
 	};
 
 	const triggerBookDelete = (book: Book) => {
