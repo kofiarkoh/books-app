@@ -3,9 +3,10 @@
 
 import {css} from "@emotion/react";
 import {Button, Typography} from "@mui/material";
-import Grid from "@mui/material/Grid";
+import Grid from "@mui/material/Unstable_Grid2";
 import {useRouter} from "next/navigation";
 import {useEffect, useRef, useState} from "react";
+import TextField, {TextFieldProps} from "@mui/material/TextField";
 
 import {useAppDispatch, useAppSelector} from "../../redux/store";
 import {Book, removeBook, updateBooks} from "../../redux/booksSlice";
@@ -23,18 +24,25 @@ export default function AddTaskDetails() {
 
 	const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
 	const bookToDeletRef = useRef<Book>(null);
-
+	const controllerRef = useRef(new AbortController());
 	/**
-	 * retrieves all tasks from the api and saves them in redux store
+	 * retrieves all books from the api and saves them in redux store
 	 * @returns
 	 */
-	const fetchTasks = async () => {
+	const fetchBooks = async (q = "") => {
+		console.log(q);
 		if (loading) {
 			return;
 		}
-		setLoading(true);
-		let response = await GET("books");
+		let controller = controllerRef.current!!;
 
+		controller.abort();
+		controllerRef.current = new AbortController();
+		controller = controllerRef.current!!;
+
+		setLoading(true);
+		let response = await GET(`books?filter[q]=${q}`, {}, controller.signal);
+		controller.abort();
 		setLoading(false);
 		dispatch(
 			showSnackBar({
@@ -86,7 +94,7 @@ export default function AddTaskDetails() {
 		closeDeleteDialog();
 	};
 	useEffect(() => {
-		fetchTasks();
+		fetchBooks();
 	}, []);
 
 	return (
@@ -103,7 +111,7 @@ export default function AddTaskDetails() {
 					alignItems: "flex-start",
 				}}>
 				<Grid container spacing={4} sx={{padding: "20px"}}>
-					<Grid item sm={12} md={12} lg={12}>
+					<Grid item={true} xs={12} sm={12} md={12} lg={12}>
 						<div
 							style={{
 								paddingTop: "10px",
@@ -124,7 +132,19 @@ export default function AddTaskDetails() {
 							</div>
 						</div>
 					</Grid>
-
+					<Grid
+						item
+						sm={12}
+						md={12}
+						lg={12}
+						//sx={{display: "flex", justifyContent: "center"}}
+					>
+						<TextField
+							sx={{width: ["100%", "600px"]}}
+							placeholder="search by title or author name or description"
+							onChange={(e) => fetchBooks(e.target.value)}
+						/>
+					</Grid>
 					{loading ? (
 						<>
 							<Grid item sm={12} md={6} lg={4}>

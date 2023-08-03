@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {GenericAbortSignal} from "axios";
 import {reduxStore} from "../redux/store";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -68,7 +68,11 @@ export const POST = async (
 		});
 };
 
-export const GET = async (endpoint: string, headers = {}) => {
+export const GET = async (
+	endpoint: string,
+	headers = {},
+	signal: GenericAbortSignal | undefined = undefined
+) => {
 	let token = reduxStore.getState().loginState.bearerToken;
 
 	let _headers = {
@@ -80,6 +84,7 @@ export const GET = async (endpoint: string, headers = {}) => {
 		.get(`${BASE_URL}/${endpoint}`, {
 			headers: _headers,
 			timeoutErrorMessage: "Connection Timed out",
+			signal: signal,
 		})
 		.then(async (res) => {
 			return {
