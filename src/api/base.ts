@@ -67,3 +67,28 @@ export const POST = async (
 			return errorHandler(error);
 		});
 };
+
+export const GET = async (endpoint: string, headers = {}) => {
+	let token = reduxStore.getState().loginState.bearerToken;
+
+	let _headers = {
+		Accept: "application/json",
+		Authorization: `Bearer ${token}`,
+	};
+	_headers = {..._headers, ...headers};
+	return await axios
+		.get(`${BASE_URL}/${endpoint}`, {
+			headers: _headers,
+			timeoutErrorMessage: "Connection Timed out",
+		})
+		.then(async (res) => {
+			return {
+				is_error: false,
+				msg: res.data,
+				code: 200,
+			};
+		})
+		.catch((error) => {
+			return errorHandler(error);
+		});
+};
