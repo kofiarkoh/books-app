@@ -11,7 +11,7 @@ import {useAppDispatch, useAppSelector} from "../../redux/store";
 import {updateBooks} from "../../redux/booksSlice";
 import {showSnackBar} from "../../redux/snackbarSlice";
 import {GET} from "../../api/base";
-import BookItem from "../../components/TaskItem";
+import BookItem from "../../components/BookItem";
 
 export default function AddTaskDetails() {
 	const [loading, setLoading] = useState(false);
