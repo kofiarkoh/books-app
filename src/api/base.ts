@@ -1,4 +1,5 @@
 import axios from "axios";
+import {reduxStore} from "../redux/store";
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 export const errorHandler = (error: any) => {
@@ -41,14 +42,99 @@ export const POST = async (
 	headers: any = {},
 	timeout = 1800000
 ) => {
+	let token = reduxStore.getState().loginState.bearerToken;
 	let _headers = {
 		Accept: "application/json",
+		Authorization: `Bearer ${token}`,
 		"Content-Type": "application/json",
 	};
 	_headers = {..._headers, ...headers};
 
 	return await axios
 		.post(`${BASE_URL}/${endpoint}`, data, {
+			headers: _headers,
+			timeout: timeout,
+			timeoutErrorMessage: "Connection Timed out",
+		})
+		.then((res) => {
+			return {
+				is_error: false,
+				msg: res.data,
+				code: 200,
+			};
+		})
+		.catch((error) => {
+			return errorHandler(error);
+		});
+};
+
+export const GET = async (endpoint: string, headers = {}) => {
+	let token = reduxStore.getState().loginState.bearerToken;
+
+	let _headers = {
+		Accept: "application/json",
+		Authorization: `Bearer ${token}`,
+	};
+	_headers = {..._headers, ...headers};
+	return await axios
+		.get(`${BASE_URL}/${endpoint}`, {
+			headers: _headers,
+			timeoutErrorMessage: "Connection Timed out",
+		})
+		.then(async (res) => {
+			return {
+				is_error: false,
+				msg: res.data,
+				code: 200,
+			};
+		})
+		.catch((error) => {
+			return errorHandler(error);
+		});
+};
+
+export const DELETE = async (endpoint: string, headers = {}) => {
+	let token = reduxStore.getState().loginState.bearerToken;
+
+	let _headers = {
+		Accept: "application/json",
+		Authorization: `Bearer ${token}`,
+	};
+	let url = `${BASE_URL}/${endpoint}`;
+	return await axios
+		.delete(url, {
+			headers: _headers,
+
+			timeoutErrorMessage: "Connection Timed out",
+		})
+		.then((res) => {
+			return {
+				is_error: false,
+				msg: res.data,
+				code: 200,
+			};
+		})
+		.catch((error) => {
+			return errorHandler(error);
+		});
+};
+
+export const PATCH = async (
+	endpoint: string,
+	data: any,
+	headers = {},
+	timeout = 1800000
+) => {
+	let token = reduxStore.getState().loginState.bearerToken;
+	let _headers = {
+		Accept: "application/json",
+		Authorization: `Bearer ${token}`,
+		"Content-Type": "application/json",
+	};
+	_headers = {..._headers, ...headers};
+
+	return await axios
+		.patch(`${BASE_URL}/${endpoint}`, data, {
 			headers: _headers,
 			timeout: timeout,
 			timeoutErrorMessage: "Connection Timed out",
