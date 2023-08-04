@@ -104,23 +104,42 @@ export default function RegistrationPage() {
 						SIGN UP
 					</Typography>
 
-					<FormTextField placeholder="First Name" name="first_name" />
-					<FormTextField placeholder="Last Name" name="last_name" sx={{mt: 4}} />
-					<FormTextField placeholder="Email" name="email" sx={{mt: 4}} />
+					<FormTextField
+						placeholder="First Name"
+						aria-label="first name"
+						name="first_name"
+					/>
+					<FormTextField
+						placeholder="Last Name"
+						aria-label="last name"
+						name="last_name"
+						sx={{mt: 4}}
+					/>
+					<FormTextField
+						placeholder="Email"
+						aria-label="email"
+						name="email"
+						sx={{mt: 4}}
+					/>
 
 					<FormPasswordInput
 						name="password"
 						placeholder="Password"
 						sx={{width: "100%", marginTop: 4}}
+						aria-label="password"
 					/>
 					<FormPasswordInput
 						name="password_confirmation"
 						placeholder="Confirm Password"
+						aria-label="confirm your password"
 						sx={{width: "100%", marginTop: 4}}
 					/>
 
 					<div style={{display: "flex", justifyContent: "flex-end"}}></div>
-					<SubmitButton sx={{width: "100%", my: 3}} loading={loading}>
+					<SubmitButton
+						aria-label="register button"
+						sx={{width: "100%", my: 3}}
+						loading={loading}>
 						Register
 					</SubmitButton>
 					<div

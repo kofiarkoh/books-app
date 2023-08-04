@@ -29,7 +29,7 @@ export default function BookItem(props: Props) {
 		router.push("/books/edit");
 	};
 	return (
-		<Box sx={{width: "100%"}}>
+		<Box sx={{width: "100%"}} aria-aria-label="book item">
 			<Card
 				variant="outlined"
 				sx={{
@@ -50,20 +50,27 @@ export default function BookItem(props: Props) {
 							By {author_name}
 						</Typography>
 					</div>
-					<Typography variant="h5" component="div" sx={{my: 2}}>
+					<Typography
+						variant="h5"
+						component="div"
+						sx={{my: 2}}
+						aria-label="book title">
 						{title}
 					</Typography>
 
-					<Typography variant="body2">{description}</Typography>
+					<Typography variant="body2" aria-label="book description">
+						{description}
+					</Typography>
 				</CardContent>
 				<CardActions sx={{flexDirection: "row", justifyContent: "flex-end"}}>
 					<Button
 						size="small"
 						color="error"
+						aria-label="delete book button"
 						onClick={() => props.onDelete(props.book)}>
 						Delete
 					</Button>
-					<Button size="small" onClick={editBook}>
+					<Button size="small" aria-label="edit book button" onClick={editBook}>
 						Edit
 					</Button>
 				</CardActions>

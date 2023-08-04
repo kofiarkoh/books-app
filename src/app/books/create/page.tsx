@@ -88,6 +88,7 @@ export default function AddBookDetails() {
 							placeholder="Title"
 							name="title"
 							sx={{width: "100%", marginTop: 4}}
+							aria-label="book title"
 						/>
 
 						<FormTextField
@@ -96,12 +97,14 @@ export default function AddBookDetails() {
 							name="description"
 							sx={{width: "100%", marginTop: 4}}
 							multiline
+							aria-label="book description"
 						/>
 						<FormTextField
 							label="Author Name"
 							placeholder="author name"
 							name="author_name"
 							sx={{width: "100%", marginTop: 4}}
+							aria-label="name of author"
 						/>
 						<div
 							style={{
