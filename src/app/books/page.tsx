@@ -44,13 +44,14 @@ export default function AddTaskDetails() {
 		let response = await GET(`books?filter[q]=${q}`, {}, controller.signal);
 		controller.abort();
 		setLoading(false);
-		dispatch(
-			showSnackBar({
-				message: response.msg.message ? response.msg.message : "An error occured",
-				severity: response.is_error ? "error" : "success",
-			})
-		);
+
 		if (response.is_error) {
+			dispatch(
+				showSnackBar({
+					message: response.msg.message ? response.msg.message : "An error occured",
+					severity: response.is_error ? "error" : "success",
+				})
+			);
 			return;
 		}
 		dispatch(updateBooks(response.msg.data));
@@ -159,6 +160,21 @@ export default function AddTaskDetails() {
 						</>
 					) : (
 						<>
+							{books.length === 0 && (
+								<>
+									<Grid
+										item
+										xs={12}
+										sm={12}
+										md={12}
+										lg={12}
+										sx={{display: "flex", justifyContent: "center"}}>
+										<Typography variant="body1" color="initial">
+											No Books Availalble
+										</Typography>
+									</Grid>
+								</>
+							)}
 							{books.map((item) => {
 								return (
 									<Grid key={item.uuid} item xs={12} sm={12} md={6} lg={4}>
