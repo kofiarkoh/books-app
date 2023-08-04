@@ -1,40 +1,35 @@
 "use client";
+import {POST} from "@/api/base";
+import FormTextField from "@/components/forms/FormTextField";
+import SubmitButton from "@/components/forms/SubmitButton";
+import {showSnackBar} from "@/redux/snackbarSlice";
+import {useAppDispatch} from "@/redux/store";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 import {Formik, FormikHelpers} from "formik";
 import Link from "next/link";
+import {useRouter} from "next/navigation";
+import {useState} from "react";
 import * as Yup from "yup";
-import FormPasswordInput from "../../../components/forms/FormPasswordInput";
-import FormTextField from "../../../components/forms/FormTextField";
-import SubmitButton from "../../../components/forms/SubmitButton";
-import {use, useState} from "react";
-import {useAppDispatch} from "@/redux/store";
-import {POST} from "../../../api/base";
-import {showSnackBar} from "../../../redux/snackbarSlice";
-import {
-	setBearerToken,
-	setLoginState,
-	setUserInfo,
-} from "../../../redux/loginSlice";
-import {routes} from "../../../routes";
+import {routes} from "../../../../routes";
 
 const valdiationSchema = Yup.object().shape({
 	email: Yup.string().email().required(),
-	password: Yup.string().required(),
 });
-export default function LoginPage() {
+
+export default function Page() {
 	const [loading, setLoading] = useState(false);
 	const dispatch = useAppDispatch();
+	const router = useRouter();
 
-	const handleLogin = async (data: any, helpers: FormikHelpers<any>) => {
+	const findAccount = async (data: any, helpers: FormikHelpers<any>) => {
 		if (loading) {
 			return;
 		}
 
 		setLoading(true);
-		let response = await POST("auth/login", data);
+		let response = await POST("auth/forgot-password", data);
 		setLoading(false);
-		console.log(response);
 		if (response.is_error) {
 			if (response.code === 422) {
 				helpers.setErrors(response.msg.errors);
@@ -57,13 +52,8 @@ export default function LoginPage() {
 			})
 		);
 
-		let user = response.msg.data;
-		let token = response.msg.meta.token;
-		sessionStorage.setItem("user_info", JSON.stringify(user));
-		sessionStorage.setItem("bearer_token", token);
-		dispatch(setUserInfo(user));
-		dispatch(setBearerToken(token));
-		dispatch(setLoginState(true));
+		sessionStorage.setItem("password_reset_email", data.email);
+		router.push(routes.verifyPasswordResetEmail);
 	};
 	return (
 		<div
@@ -78,31 +68,21 @@ export default function LoginPage() {
 				alignItems: "center",
 			}}>
 			<Formik
-				initialValues={{email: "", password: ""}}
+				initialValues={{email: ""}}
 				validationSchema={valdiationSchema}
 				validateOnBlur={false}
 				validateOnMount={false}
 				validateOnChange={false}
-				onSubmit={handleLogin}>
+				onSubmit={findAccount}>
 				<Card sx={{padding: 5, margin: {xs: 4}}}>
 					<Typography variant="h4" my={3} sx={{textAlign: "center"}}>
-						Welcome Back
+						Find Your Account
 					</Typography>
 
 					<FormTextField placeholder="Email" name="email" />
-					<FormPasswordInput
-						name="password"
-						placeholder="Password"
-						sx={{width: "100%", marginTop: 4}}
-					/>
 
-					<div style={{display: "flex", justifyContent: "flex-end"}}>
-						<Link href={routes.findAccount} style={{textDecoration: "none"}}>
-							<Typography pl={2}>Forgot Password?</Typography>
-						</Link>
-					</div>
 					<SubmitButton loading={loading} sx={{width: "100%", my: 3}}>
-						Log In
+						Submit
 					</SubmitButton>
 					<div
 						style={{
@@ -110,9 +90,9 @@ export default function LoginPage() {
 							justifyContent: "center",
 							alignItems: "center",
 						}}>
-						<Typography>Don&apos;t have an account?</Typography>
-						<Link href="/auth/register" style={{textDecoration: "none"}}>
-							<Typography pl={2}> Sign Up</Typography>
+						<Typography>Remember your credentials?</Typography>
+						<Link href="/auth/login" style={{textDecoration: "none"}}>
+							<Typography pl={2}> Sign In Here</Typography>
 						</Link>
 					</div>
 				</Card>

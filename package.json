@@ -23,6 +23,7 @@
     "eslint": "8.46.0",
     "eslint-config-next": "13.4.12",
     "formik": "^2.4.3",
+    "mui-one-time-password-input": "^1.2.5",
     "next": "13.4.12",
     "react": "18.2.0",
     "react-dom": "18.2.0",
