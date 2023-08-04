@@ -130,8 +130,17 @@ export default function AddTaskDetails() {
 					flexDirection: "column",
 					alignItems: "flex-start",
 				}}>
-				<Grid container spacing={4} sx={{padding: "20px"}}>
-					<Grid item={true} xs={12} sm={12} md={12} lg={12}>
+				<Grid
+					container
+					spacing={4}
+					sx={{
+						//padding: "20px",
+
+						width: "100%",
+						marginLeft: 0,
+						marginTop: 0,
+					}}>
+					<Grid item xs={12} sm={12} md={12} lg={12}>
 						<div
 							style={{
 								paddingTop: "10px",
@@ -187,7 +196,10 @@ export default function AddTaskDetails() {
 										sm={12}
 										md={12}
 										lg={12}
-										sx={{display: "flex", justifyContent: "center"}}>
+										sx={{
+											display: "flex",
+											justifyContent: "center",
+										}}>
 										<Typography variant="body1" color="initial">
 											No Books Availalble
 										</Typography>

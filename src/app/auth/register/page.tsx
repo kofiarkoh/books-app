@@ -12,6 +12,8 @@ import {POST} from "../../../api/base";
 import {useAppDispatch} from "../../../redux/store";
 import {showSnackBar} from "../../../redux/snackbarSlice";
 import {setBearerToken, setLoginState, setUserInfo} from "@/redux/loginSlice";
+import {useRouter} from "next/navigation";
+import {routes} from "../../../routes";
 
 const valdiationSchema = Yup.object().shape({
 	first_name: Yup.string().required(),
@@ -26,6 +28,7 @@ const valdiationSchema = Yup.object().shape({
 export default function RegistrationPage() {
 	const [loading, setLoading] = useState(false);
 	const dispatch = useAppDispatch();
+	const router = useRouter();
 
 	const handleRegister = async (data: any, helpers: FormikHelpers<any>) => {
 		if (loading) {
@@ -64,7 +67,8 @@ export default function RegistrationPage() {
 		sessionStorage.setItem("bearer_token", token);
 		dispatch(setUserInfo(user));
 		dispatch(setBearerToken(token));
-		dispatch(setLoginState(true));
+		router.push(routes.verifySignUpEmail);
+		//dispatch(setLoginState(true));
 	};
 
 	return (
