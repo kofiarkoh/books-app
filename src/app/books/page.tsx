@@ -230,6 +230,7 @@ export default function AddTaskDetails() {
 											count={pagination.total}
 											page={page}
 											onChange={handlePageChange}
+											aria-label="Pagination-  Move between pages of data"
 										/>
 									</Grid>
 								</>

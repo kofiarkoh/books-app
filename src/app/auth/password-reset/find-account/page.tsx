@@ -83,9 +83,12 @@ export default function Page() {
 						Find Your Account
 					</Typography>
 
-					<FormTextField placeholder="Email" name="email" />
+					<FormTextField placeholder="Email" aria-label="your email" name="email" />
 
-					<SubmitButton loading={loading} sx={{width: "100%", my: 3}}>
+					<SubmitButton
+						loading={loading}
+						aria-label="find account button"
+						sx={{width: "100%", my: 3}}>
 						Submit
 					</SubmitButton>
 					<div

@@ -95,10 +95,15 @@ export default function LoginPage() {
 						Welcome Back
 					</Typography>
 
-					<FormTextField placeholder="Email" name="email" />
+					<FormTextField
+						placeholder="Email"
+						name="email"
+						aria-label="your account email"
+					/>
 					<FormPasswordInput
 						name="password"
 						placeholder="Password"
+						aria-label="your account password"
 						sx={{width: "100%", marginTop: 4}}
 					/>
 
@@ -107,7 +112,10 @@ export default function LoginPage() {
 							<Typography pl={2}>Forgot Password?</Typography>
 						</Link>
 					</div>
-					<SubmitButton loading={loading} sx={{width: "100%", my: 3}}>
+					<SubmitButton
+						loading={loading}
+						aria-label="login button"
+						sx={{width: "100%", my: 3}}>
 						Log In
 					</SubmitButton>
 					<div

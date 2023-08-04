@@ -94,14 +94,22 @@ export default function Page() {
 						Reset Your Password
 					</Typography>
 
-					<FormPasswordInput placeholder="Password" name="password" />
+					<FormPasswordInput
+						placeholder="Password"
+						aria-label="your new password"
+						name="password"
+					/>
 					<FormPasswordInput
 						placeholder="Confirm Password"
 						name="password_confirmation"
 						sx={{mt: 2, width: "100%"}}
+						aria-label="confirm your new password"
 					/>
 
-					<SubmitButton loading={loading} sx={{width: "100%", my: 3}}>
+					<SubmitButton
+						aria-label="register button"
+						loading={loading}
+						sx={{width: "100%", my: 3}}>
 						Submit
 					</SubmitButton>
 				</Card>
