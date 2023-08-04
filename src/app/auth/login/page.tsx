@@ -17,6 +17,7 @@ import {
 	setUserInfo,
 } from "../../../redux/loginSlice";
 import {routes} from "../../../routes";
+import {useRouter} from "next/navigation";
 
 const valdiationSchema = Yup.object().shape({
 	email: Yup.string().email().required(),
@@ -25,6 +26,7 @@ const valdiationSchema = Yup.object().shape({
 export default function LoginPage() {
 	const [loading, setLoading] = useState(false);
 	const dispatch = useAppDispatch();
+	const router = useRouter();
 
 	const handleLogin = async (data: any, helpers: FormikHelpers<any>) => {
 		if (loading) {
@@ -34,7 +36,6 @@ export default function LoginPage() {
 		setLoading(true);
 		let response = await POST("auth/login", data);
 		setLoading(false);
-		console.log(response);
 		if (response.is_error) {
 			if (response.code === 422) {
 				helpers.setErrors(response.msg.errors);
@@ -64,6 +65,7 @@ export default function LoginPage() {
 		dispatch(setUserInfo(user));
 		dispatch(setBearerToken(token));
 		dispatch(setLoginState(true));
+		router.push(routes.books);
 	};
 
 	useEffect(() => {
