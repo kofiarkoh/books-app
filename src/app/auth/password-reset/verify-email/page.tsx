@@ -36,9 +36,8 @@ export default function Page() {
 			})
 		);
 		if (!response.is_error) {
-			/* sessionStorage.setItem("password_token", otp);
-		router.push(routes.verifyPasswordResetEmail);
-			return; */
+			sessionStorage.setItem("password_reset_token", otp);
+			router.push(routes.resetPassword);
 		}
 	};
 	return (
