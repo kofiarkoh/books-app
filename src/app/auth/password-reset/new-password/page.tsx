@@ -7,7 +7,7 @@ import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 import {Formik, FormikHelpers} from "formik";
 import {useRouter} from "next/navigation";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import * as Yup from "yup";
 import FormPasswordInput from "../../../../components/forms/FormPasswordInput";
 import {routes} from "../../../../routes";
@@ -50,6 +50,21 @@ export default function Page() {
 			router.push(routes.login);
 		}
 	};
+
+	useEffect(() => {
+		let email = sessionStorage.getItem("password_reset_email");
+		let token = sessionStorage.getItem("password_reset_token");
+
+		if (email === null || token === null) {
+			dispatch(
+				showSnackBar({
+					message: "No reset credentials found",
+					severity: "error",
+				})
+			);
+			router.push(routes.login);
+		}
+	}, []);
 	return (
 		<div
 			style={{
