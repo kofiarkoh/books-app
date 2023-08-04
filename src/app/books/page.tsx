@@ -134,11 +134,11 @@ export default function AddTaskDetails() {
 					</Grid>
 					<Grid
 						item
+						xs={12}
 						sm={12}
 						md={12}
 						lg={12}
-						//sx={{display: "flex", justifyContent: "center"}}
-					>
+						sx={{display: "flex", justifyContent: "center"}}>
 						<TextField
 							sx={{width: ["100%", "600px"]}}
 							placeholder="search by title or author name or description"
@@ -147,13 +147,13 @@ export default function AddTaskDetails() {
 					</Grid>
 					{loading ? (
 						<>
-							<Grid item sm={12} md={6} lg={4}>
+							<Grid item xs={12} sm={12} md={6} lg={4}>
 								<BookItemSkeleton />
 							</Grid>
-							<Grid item sm={12} md={6} lg={4}>
+							<Grid item xs={12} sm={12} md={6} lg={4}>
 								<BookItemSkeleton />
 							</Grid>
-							<Grid item sm={12} md={6} lg={4}>
+							<Grid item xs={12} sm={12} md={6} lg={4}>
 								<BookItemSkeleton />
 							</Grid>
 						</>
@@ -161,7 +161,7 @@ export default function AddTaskDetails() {
 						<>
 							{books.map((item) => {
 								return (
-									<Grid key={item.uuid} item sm={12} md={6} lg={4}>
+									<Grid key={item.uuid} item xs={12} sm={12} md={6} lg={4}>
 										<BookItem book={item} onDelete={triggerBookDelete} />
 									</Grid>
 								);
