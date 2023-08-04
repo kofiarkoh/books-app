@@ -117,6 +117,9 @@ export default function AddTaskDetails() {
 		fetchBooks();
 	}, []);
 
+	useEffect(() => {
+		document.title = "My Books";
+	}, []);
 	return (
 		<>
 			<div

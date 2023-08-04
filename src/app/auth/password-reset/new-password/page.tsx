@@ -65,6 +65,11 @@ export default function Page() {
 			router.push(routes.login);
 		}
 	}, []);
+
+	useEffect(() => {
+		document.title = "Reset Password";
+	}, []);
+
 	return (
 		<div
 			style={{

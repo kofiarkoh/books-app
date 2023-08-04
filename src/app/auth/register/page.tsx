@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import FormPasswordInput from "../../../components/forms/FormPasswordInput";
 import FormTextField from "../../../components/forms/FormTextField";
 import SubmitButton from "../../../components/forms/SubmitButton";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {POST} from "../../../api/base";
 import {useAppDispatch} from "../../../redux/store";
 import {showSnackBar} from "../../../redux/snackbarSlice";
@@ -71,6 +71,9 @@ export default function RegistrationPage() {
 		//dispatch(setLoginState(true));
 	};
 
+	useEffect(() => {
+		document.title = "Sign Up";
+	}, []);
 	return (
 		<div
 			style={{

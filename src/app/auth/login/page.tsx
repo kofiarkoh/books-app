@@ -7,7 +7,7 @@ import * as Yup from "yup";
 import FormPasswordInput from "../../../components/forms/FormPasswordInput";
 import FormTextField from "../../../components/forms/FormTextField";
 import SubmitButton from "../../../components/forms/SubmitButton";
-import {use, useState} from "react";
+import {use, useState, useEffect} from "react";
 import {useAppDispatch} from "@/redux/store";
 import {POST} from "../../../api/base";
 import {showSnackBar} from "../../../redux/snackbarSlice";
@@ -65,6 +65,10 @@ export default function LoginPage() {
 		dispatch(setBearerToken(token));
 		dispatch(setLoginState(true));
 	};
+
+	useEffect(() => {
+		document.title = "Login";
+	}, []);
 	return (
 		<div
 			style={{

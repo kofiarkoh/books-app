@@ -64,6 +64,9 @@ export default function EditBookDetails() {
 		formikRef.current?.setValues(bookToEdit);
 	}, [bookToEdit]);
 
+	useEffect(() => {
+		document.title = "Edit Book Details";
+	}, []);
 	return (
 		<>
 			<div

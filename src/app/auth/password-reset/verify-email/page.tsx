@@ -55,6 +55,10 @@ export default function Page() {
 		}
 	}, []);
 
+	useEffect(() => {
+		document.title = "Verify Email";
+	}, []);
+
 	return (
 		<div
 			style={{
