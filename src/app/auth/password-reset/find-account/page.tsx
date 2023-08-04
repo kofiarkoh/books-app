@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import {Formik, FormikHelpers} from "formik";
 import Link from "next/link";
 import {useRouter} from "next/navigation";
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import * as Yup from "yup";
 import {routes} from "../../../../routes";
 
@@ -55,6 +55,10 @@ export default function Page() {
 		sessionStorage.setItem("password_reset_email", data.email);
 		router.push(routes.verifyPasswordResetEmail);
 	};
+
+	useEffect(() => {
+		document.title = "Find Your Account";
+	}, []);
 	return (
 		<div
 			style={{

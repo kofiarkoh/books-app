@@ -2,7 +2,7 @@
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 import {Formik, FormikHelpers} from "formik";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import * as Yup from "yup";
 import {POST} from "../../../api/base";
 import FormTextField from "../../../components/forms/FormTextField";
@@ -50,6 +50,10 @@ export default function AddBookDetails() {
 			})
 		);
 	};
+
+	useEffect(() => {
+		document.title = "Add Book Details";
+	}, []);
 	return (
 		<>
 			<div
