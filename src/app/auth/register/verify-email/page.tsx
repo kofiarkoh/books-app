@@ -1,19 +1,22 @@
 "use client";
 import {POST} from "@/api/base";
 import {showSnackBar} from "@/redux/snackbarSlice";
-import {useAppDispatch} from "@/redux/store";
+import {useAppDispatch, useAppSelector} from "@/redux/store";
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 import {useRouter} from "next/navigation";
 import {useState, useEffect} from "react";
 import OTPVerification from "@/components/input/OTPVerification";
 import {routes} from "@/routes";
+import {useResendEmail} from "@/hooks/useResendEmail";
 
 export default function Page() {
 	const [loading, setLoading] = useState(false);
 	const dispatch = useAppDispatch();
 	const router = useRouter();
 	const [otp, setOtp] = useState("");
+	const [isResending, resendEmail] = useResendEmail();
+	const {user} = useAppSelector((state) => state.loginState);
 
 	const submitOTP = async () => {
 		if (loading) {
@@ -33,9 +36,12 @@ export default function Page() {
 			})
 		);
 		if (!response.is_error) {
-			sessionStorage.setItem("password_reset_token", otp);
 			router.push(routes.books);
 		}
+	};
+
+	const handleResend = () => {
+		resendEmail(false, user.email);
 	};
 
 	useEffect(() => {
@@ -66,11 +72,9 @@ export default function Page() {
 					otp={otp}
 					handleOTPChange={setOtp}
 					isLoading={loading}
-					isResending={false}
+					isResending={isResending}
 					onSubmit={submitOTP}
-					handleResend={function (): void {
-						throw new Error("Function not implemented.");
-					}}
+					handleResend={handleResend}
 				/>
 			</Card>
 		</div>
