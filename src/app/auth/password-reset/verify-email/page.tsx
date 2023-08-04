@@ -9,13 +9,14 @@ import {useRouter} from "next/navigation";
 import {useState, useEffect} from "react";
 import OTPVerification from "../../../../components/input/OTPVerification";
 import {routes} from "../../../../routes";
+import {useResendEmail} from "../../../../hooks/useResendEmail";
 
 export default function Page() {
 	const [loading, setLoading] = useState(false);
 	const dispatch = useAppDispatch();
 	const router = useRouter();
 	const [otp, setOtp] = useState("");
-
+	const [isResending, resendEmail] = useResendEmail();
 	const submitOTP = async () => {
 		if (loading) {
 			return;
@@ -41,6 +42,9 @@ export default function Page() {
 		}
 	};
 
+	const handleResend = () => {
+		resendEmail(true, sessionStorage.getItem("password_reset_email"));
+	};
 	useEffect(() => {
 		let email = sessionStorage.getItem("password_reset_email");
 
@@ -83,11 +87,9 @@ export default function Page() {
 					otp={otp}
 					handleOTPChange={setOtp}
 					isLoading={loading}
-					isResending={false}
+					isResending={isResending}
 					onSubmit={submitOTP}
-					handleResend={function (): void {
-						throw new Error("Function not implemented.");
-					}}
+					handleResend={handleResend}
 				/>
 			</Card>
 		</div>
