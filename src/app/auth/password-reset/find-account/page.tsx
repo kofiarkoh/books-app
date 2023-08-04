@@ -8,8 +8,10 @@ import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 import {Formik, FormikHelpers} from "formik";
 import Link from "next/link";
+import {useRouter} from "next/navigation";
 import {useState} from "react";
 import * as Yup from "yup";
+import {routes} from "../../../../routes";
 
 const valdiationSchema = Yup.object().shape({
 	email: Yup.string().email().required(),
@@ -18,6 +20,7 @@ const valdiationSchema = Yup.object().shape({
 export default function Page() {
 	const [loading, setLoading] = useState(false);
 	const dispatch = useAppDispatch();
+	const router = useRouter();
 
 	const findAccount = async (data: any, helpers: FormikHelpers<any>) => {
 		if (loading) {
@@ -50,6 +53,7 @@ export default function Page() {
 		);
 
 		sessionStorage.setItem("password_reset_email", data.email);
+		router.push(routes.verifyPasswordResetEmail);
 	};
 	return (
 		<div
