@@ -14,6 +14,7 @@ import {showSnackBar} from "../../redux/snackbarSlice";
 import {DELETE, GET} from "../../api/base";
 import BookItem, {BookItemSkeleton} from "../../components/BookItem";
 import ConfirmDialog from "../../components/ConfirmDialog";
+import Pagination from "@mui/material/Pagination";
 
 export default function AddTaskDetails() {
 	const [loading, setLoading] = useState(false);
@@ -25,11 +26,14 @@ export default function AddTaskDetails() {
 	const [deleteDialogVisible, setDeleteDialogVisible] = useState(false);
 	const bookToDeletRef = useRef<Book>(null);
 	const controllerRef = useRef(new AbortController());
+	const [pagination, setPagination] = useState({});
+	const [page, setPage] = useState(1);
+	const [query, setQuery] = useState("");
 	/**
 	 * retrieves all books from the api and saves them in redux store
 	 * @returns
 	 */
-	const fetchBooks = async (q = "") => {
+	const fetchBooks = async (q = "", _page = 1) => {
 		console.log(q);
 		if (loading) {
 			return;
@@ -41,7 +45,11 @@ export default function AddTaskDetails() {
 		controller = controllerRef.current!!;
 
 		setLoading(true);
-		let response = await GET(`books?filter[q]=${q}`, {}, controller.signal);
+		let response = await GET(
+			`books?page=${_page}&filter[q]=${q}`,
+			{},
+			controller.signal
+		);
 		controller.abort();
 		setLoading(false);
 
@@ -55,8 +63,21 @@ export default function AddTaskDetails() {
 			return;
 		}
 		dispatch(updateBooks(response.msg.data));
+		setPagination(response.msg.meta.pagination);
 	};
 
+	const onSearchChange = (event: any) => {
+		setQuery(event.target.value);
+		fetchBooks(query, page);
+	};
+
+	const handlePageChange = (
+		event: React.ChangeEvent<unknown>,
+		value: number
+	) => {
+		setPage(value);
+		fetchBooks(query, value);
+	};
 	const addBook = () => {
 		router.push("/books/create");
 	};
@@ -143,7 +164,7 @@ export default function AddTaskDetails() {
 						<TextField
 							sx={{width: ["100%", "600px"]}}
 							placeholder="search by title or author name or description"
-							onChange={(e) => fetchBooks(e.target.value)}
+							onChange={onSearchChange}
 						/>
 					</Grid>
 					{loading ? (
@@ -175,13 +196,31 @@ export default function AddTaskDetails() {
 									</Grid>
 								</>
 							)}
-							{books.map((item) => {
-								return (
-									<Grid key={item.uuid} item xs={12} sm={12} md={6} lg={4}>
-										<BookItem book={item} onDelete={triggerBookDelete} />
+
+							{books.length !== 0 && (
+								<>
+									{books.map((item) => {
+										return (
+											<Grid key={item.uuid} item xs={12} sm={12} md={6} lg={4}>
+												<BookItem book={item} onDelete={triggerBookDelete} />
+											</Grid>
+										);
+									})}
+									<Grid
+										item
+										xs={12}
+										sm={12}
+										md={12}
+										lg={12}
+										sx={{display: "flex", justifyContent: "flex-end"}}>
+										<Pagination
+											count={pagination.total}
+											page={page}
+											onChange={handlePageChange}
+										/>
 									</Grid>
-								);
-							})}
+								</>
+							)}
 						</>
 					)}
 				</Grid>
