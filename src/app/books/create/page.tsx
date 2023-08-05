@@ -2,6 +2,7 @@
 import Card from "@mui/material/Card";
 import Typography from "@mui/material/Typography";
 import {Formik, FormikHelpers} from "formik";
+import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 import * as Yup from "yup";
 import {POST} from "../../../api/base";
@@ -9,6 +10,7 @@ import FormTextField from "../../../components/forms/FormTextField";
 import SubmitButton from "../../../components/forms/SubmitButton";
 import {showSnackBar} from "../../../redux/snackbarSlice";
 import {useAppDispatch} from "../../../redux/store";
+import {routes} from "../../../routes";
 
 const valdiationSchema = Yup.object().shape({
 	title: Yup.string().required(),
@@ -18,6 +20,7 @@ const valdiationSchema = Yup.object().shape({
 export default function AddBookDetails() {
 	const [loading, setLoading] = useState(false);
 	const dispatch = useAppDispatch();
+	const router = useRouter();
 
 	const saveBookDetails = async (data: any, helpers: FormikHelpers<any>) => {
 		if (loading) {
@@ -49,6 +52,8 @@ export default function AddBookDetails() {
 				severity: "success",
 			})
 		);
+		//dispatch(addBook(response.msg.data));
+		router.push(routes.books);
 	};
 
 	useEffect(() => {
