@@ -227,7 +227,7 @@ export default function AddTaskDetails() {
 										lg={12}
 										sx={{display: "flex", justifyContent: "flex-end"}}>
 										<Pagination
-											count={pagination.total}
+											count={pagination.total_pages}
 											page={page}
 											onChange={handlePageChange}
 											aria-label="Pagination-  Move between pages of data"
