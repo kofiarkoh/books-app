@@ -11,6 +11,8 @@ import SubmitButton from "../../../components/forms/SubmitButton";
 import {showSnackBar} from "../../../redux/snackbarSlice";
 import {useAppDispatch, useAppSelector} from "../../../redux/store";
 import {updateBookInState} from "../../../redux/booksSlice";
+import {routes} from "@/routes";
+import Link from "next/link";
 
 const valdiationSchema = Yup.object().shape({
 	title: Yup.string().required(),
@@ -125,11 +127,15 @@ export default function EditBookDetails() {
 						<div
 							style={{
 								display: "flex",
-								justifyContent: "flex-end",
-							}}></div>
-						<SubmitButton loading={loading} sx={{width: "100%", my: 3}}>
-							Update Book Details
-						</SubmitButton>
+								justifyContent: "center",
+								alignItems: "center",
+								flexDirection: "column",
+							}}>
+							<SubmitButton loading={loading} sx={{width: "100%", my: 3}}>
+								Update Book Details
+							</SubmitButton>
+							<Link href={routes.books}>Go Back To View Books</Link>
+						</div>
 					</Card>
 				</Formik>
 			</div>
